@@ -9,7 +9,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key); 
+  const MyApp({super.key}); 
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,10 +20,10 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/login',
       routes: {
-        '/login': (context) => const LoginScreen(), 
-        '/register': (context) => const RegisterScreen(), 
-        '/profile': (context) => const ProfileScreen(), 
-        '/main': (context) => const MainScreen(), 
+        '/login': (context) => const LoginScreen(),
+        '/register': (context) => const RegisterScreen(),
+        '/profile': (context) => const ProfileScreen(),
+        '/main': (context) => const MainScreen(),
       },
     );
   }

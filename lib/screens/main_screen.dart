@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatelessWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  const MainScreen({super.key});  
 
   @override
   Widget build(BuildContext context) {
@@ -13,12 +13,12 @@ class MainScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.account_circle),
             onPressed: () {
-              // Перехід на сторінку профілю
+             
               Navigator.pushNamed(context, '/profile');
             },
           ),
           IconButton(
-            icon: const Icon(Icons.exit_to_app), 
+            icon: const Icon(Icons.exit_to_app),
             onPressed: () {
               Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
             },
@@ -35,8 +35,8 @@ class MainScreen extends StatelessWidget {
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
+          children: const [
+            Text(
               'Розумне опалення',
               style: TextStyle(
                 fontSize: 30,
@@ -44,16 +44,16 @@ class MainScreen extends StatelessWidget {
                 color: Color.fromARGB(255, 205, 34, 102),
               ),
             ),
-            const SizedBox(height: 20),
-            const Text(
+            SizedBox(height: 20),
+            Text(
               'Налаштуйте температуру кімнати:',
               style: TextStyle(
                 fontSize: 20,
                 color: Color.fromARGB(255, 202, 31, 100),
               ),
             ),
-            const SizedBox(height: 20),
-            const TemperatureControl(),
+            SizedBox(height: 20),
+            TemperatureControl(),
           ],
         ),
       ),
@@ -62,13 +62,13 @@ class MainScreen extends StatelessWidget {
 }
 
 class TemperatureControl extends StatefulWidget {
-  const TemperatureControl({Key? key}) : super(key: key);
+  const TemperatureControl({super.key});  
 
   @override
-  _TemperatureControlState createState() => _TemperatureControlState();
+  TemperatureControlState createState() => TemperatureControlState();  
 }
 
-class _TemperatureControlState extends State<TemperatureControl> {
+class TemperatureControlState extends State<TemperatureControl> {  
   double _temperature = 22.0;
 
   @override

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatelessWidget {
-  const MainScreen({super.key});  
+  const MainScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,6 @@ class MainScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.account_circle),
             onPressed: () {
-             
               Navigator.pushNamed(context, '/profile');
             },
           ),
@@ -27,8 +26,8 @@ class MainScreen extends StatelessWidget {
       ),
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.pink.shade50, Colors.pink.shade100],
+          gradient: const LinearGradient(
+            colors: [Color.fromARGB(255, 224, 180, 194), Color.fromARGB(255, 222, 172, 190)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -62,13 +61,13 @@ class MainScreen extends StatelessWidget {
 }
 
 class TemperatureControl extends StatefulWidget {
-  const TemperatureControl({super.key});  
+  const TemperatureControl({super.key});
 
   @override
-  TemperatureControlState createState() => TemperatureControlState();  
+  TemperatureControlState createState() => TemperatureControlState();
 }
 
-class TemperatureControlState extends State<TemperatureControl> {  
+class TemperatureControlState extends State<TemperatureControl> {
   double _temperature = 22.0;
 
   @override

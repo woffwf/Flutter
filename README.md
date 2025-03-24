@@ -1,2 +1,4 @@
+<<<<<<< HEAD
 Smart heating
  # Flutter
+

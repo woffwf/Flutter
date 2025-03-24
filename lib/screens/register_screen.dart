@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({Key? key}) : super(key: key);
+
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 }
@@ -14,7 +16,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Реєстрація'),
+        title: const Text('Реєстрація'),
         backgroundColor: Colors.pink.shade200,
       ),
       body: Container(
@@ -25,7 +27,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             end: Alignment.bottomRight,
           ),
         ),
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
@@ -35,7 +37,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 controller: _emailController,
                 decoration: InputDecoration(
                   labelText: 'Електронна пошта',
-                  labelStyle: TextStyle(color: Colors.pink),
+                  labelStyle: const TextStyle(color: Colors.pink),
                   filled: true,
                   fillColor: Colors.white.withOpacity(0.8),
                   border: OutlineInputBorder(
@@ -51,13 +53,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'Пароль',
-                  labelStyle: TextStyle(color: Colors.pink),
+                  labelStyle: const TextStyle(color: Colors.pink),
                   filled: true,
                   fillColor: Colors.white.withOpacity(0.8),
                   border: OutlineInputBorder(
@@ -71,10 +73,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   return null;
                 },
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 14, horizontal: 40),
+                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 40),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
@@ -86,18 +88,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Navigator.pushNamed(context, '/main');
                   }
                 },
-                child: Text('Зареєструватися'),
+                child: const Text('Зареєструватися'),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Вже є акаунт?'),
+                  const Text('Вже є акаунт?'),
                   TextButton(
                     onPressed: () {
                       Navigator.pushNamed(context, '/login');
                     },
-                    child: Text(
+                    child: const Text(
                       'Увійти',
                       style: TextStyle(color: Colors.pink),
                     ),

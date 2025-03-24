@@ -5,10 +5,11 @@ import 'screens/profile_screen.dart';
 import 'screens/main_screen.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key); 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -18,10 +19,10 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/login',
       routes: {
-        '/login': (context) => LoginScreen(),
-        '/register': (context) => RegisterScreen(),
-        '/profile': (context) => ProfileScreen(),
-        '/main': (context) => MainScreen(),
+        '/login': (context) => const LoginScreen(), 
+        '/register': (context) => const RegisterScreen(), 
+        '/profile': (context) => const ProfileScreen(), 
+        '/main': (context) => const MainScreen(), 
       },
     );
   }

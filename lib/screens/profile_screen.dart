@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({Key? key}) : super(key: key);
+
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
@@ -13,11 +15,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Редагувати профіль'),
+        title: const Text('Редагувати профіль'),
         backgroundColor: Colors.pink.shade200,
       ),
       body: Container(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [Colors.pink.shade50, Colors.pink.shade100],
@@ -28,20 +30,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Редагування профілю',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Colors.pink.shade700,
+                color: Color.fromARGB(255, 206, 28, 99),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             TextField(
               controller: _nameController,
               decoration: InputDecoration(
                 labelText: 'Ім’я',
-                labelStyle: TextStyle(color: Colors.pink),
+                labelStyle: const TextStyle(color: Colors.pink),
                 filled: true,
                 fillColor: Colors.white.withOpacity(0.8),
                 border: OutlineInputBorder(
@@ -49,12 +51,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             TextField(
               controller: _emailController,
               decoration: InputDecoration(
                 labelText: 'Електронна пошта',
-                labelStyle: TextStyle(color: Colors.pink),
+                labelStyle: const TextStyle(color: Colors.pink),
                 filled: true,
                 fillColor: Colors.white.withOpacity(0.8),
                 border: OutlineInputBorder(
@@ -63,10 +65,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               keyboardType: TextInputType.emailAddress,
             ),
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 14, horizontal: 40),
+                padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 40),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
@@ -74,20 +76,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 elevation: 5,
               ),
               onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text('Дані успішно оновлено!'),
                 ));
               },
-              child: Text('Зберегти зміни'),
+              child: const Text('Зберегти зміни'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             TextButton(
               onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text('Доступ надано!'),
                 ));
               },
-              child: Text(
+              child: const Text(
                 'Надати доступ до акаунту',
                 style: TextStyle(color: Colors.pink),
               ),

@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatelessWidget {
+  const MainScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Головна сторінка'),
+        title: const Text('Головна сторінка'),
         backgroundColor: Colors.pink.shade200,
         actions: [
           IconButton(
-            icon: Icon(Icons.account_circle),
+            icon: const Icon(Icons.account_circle),
             onPressed: () {
               // Перехід на сторінку профілю
               Navigator.pushNamed(context, '/profile');
             },
           ),
           IconButton(
-            icon: Icon(Icons.exit_to_app), 
+            icon: const Icon(Icons.exit_to_app), 
             onPressed: () {
               Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
             },
@@ -34,24 +36,24 @@ class MainScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+            const Text(
               'Розумне опалення',
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
-                color: Colors.pink.shade700,
+                color: Color.fromARGB(255, 205, 34, 102),
               ),
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Налаштуйте температуру кімнати:',
               style: TextStyle(
                 fontSize: 20,
-                color: Colors.pink.shade700,
+                color: Color.fromARGB(255, 202, 31, 100),
               ),
             ),
-            SizedBox(height: 20),
-            TemperatureControl(),
+            const SizedBox(height: 20),
+            const TemperatureControl(),
           ],
         ),
       ),
@@ -60,6 +62,8 @@ class MainScreen extends StatelessWidget {
 }
 
 class TemperatureControl extends StatefulWidget {
+  const TemperatureControl({Key? key}) : super(key: key);
+
   @override
   _TemperatureControlState createState() => _TemperatureControlState();
 }

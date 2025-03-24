@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+const Color myPinkColor = Color.fromARGB(255, 205, 34, 102);  
+
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
 
@@ -40,7 +42,7 @@ class MainScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
-                color: Color.fromARGB(255, 205, 34, 102),
+                color: myPinkColor,  
               ),
             ),
             SizedBox(height: 20),
@@ -79,7 +81,7 @@ class TemperatureControlState extends State<TemperatureControl> {
           style: TextStyle(
             fontSize: 50,
             fontWeight: FontWeight.bold,
-            color: Colors.pink.shade700,
+            color: myPinkColor,  
           ),
         ),
         Slider(

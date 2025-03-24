@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});  // Use super.key here
+  const RegisterScreen({super.key});  
 
   @override
-  RegisterScreenState createState() => RegisterScreenState();  // Use the public state class
+  RegisterScreenState createState() => RegisterScreenState();  
 }
 
-class RegisterScreenState extends State<RegisterScreen> {  // Remove the underscore to make it public
+class RegisterScreenState extends State<RegisterScreen> {  
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();

@@ -73,30 +73,31 @@ class TemperatureControl extends StatefulWidget {
 class TemperatureControlState extends State<TemperatureControl> {
   double _temperature = 22.0;
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          '${_temperature.toStringAsFixed(1)}°C',
-          style: const TextStyle(
-            fontSize: 50,
-            fontWeight: FontWeight.bold,
-            color: Color.fromARGB(255, 214, 35, 106),
-          ),
+ @override
+Widget build(BuildContext context) {
+  return Column(
+    children: [
+      
+      Text(
+        '${_temperature.toStringAsFixed(1)}°C',
+        style: const TextStyle(
+          fontSize: 50,
+          fontWeight: FontWeight.bold,
+          color: Color(0xFFD6236A), 
         ),
-        Slider(
-          value: _temperature,
-          min: 15.0,
-          max: 30.0,
-          divisions: 30,
-          onChanged: (double newValue) {
-            setState(() {
-              _temperature = newValue;
-            });
-          },
-        ),
-      ],
-    );
-  }
+      ),
+      Slider(
+        value: _temperature,
+        min: 15.0,
+        max: 30.0,
+        divisions: 30,
+        onChanged: (double newValue) {
+          setState(() {
+            _temperature = newValue;
+          });
+        },
+      ),
+    ],
+  );
+}
 }

@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatelessWidget {
+  const MainScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Головна сторінка'),
+        title: const Text('Головна сторінка'),
         backgroundColor: Colors.pink.shade200,
         actions: [
           IconButton(
-            icon: Icon(Icons.account_circle),
+            icon: const Icon(Icons.account_circle),
             onPressed: () {
-              // Перехід на сторінку профілю
+             
               Navigator.pushNamed(context, '/profile');
             },
           ),
           IconButton(
-            icon: Icon(Icons.exit_to_app), 
+            icon: const Icon(Icons.exit_to_app), 
             onPressed: () {
               Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
             },
@@ -42,7 +43,7 @@ class MainScreen extends StatelessWidget {
                 color: Colors.pink.shade700,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text(
               'Налаштуйте температуру кімнати:',
               style: TextStyle(
@@ -50,7 +51,7 @@ class MainScreen extends StatelessWidget {
                 color: Colors.pink.shade700,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             TemperatureControl(),
           ],
         ),

@@ -24,7 +24,7 @@ class MainScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: const DecoratedBox( 
+      body: const DecoratedBox(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
@@ -35,14 +35,14 @@ class MainScreen extends StatelessWidget {
             end: Alignment.bottomRight,
           ),
         ),
-        child: MainContent(), 
+        child: MainContent(),
       ),
     );
   }
 }
 
 class MainContent extends StatelessWidget {
-  const MainContent({super.key}); 
+  const MainContent({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +66,7 @@ class MainContent extends StatelessWidget {
           ),
         ),
         SizedBox(height: 20),
-        TemperatureControl(),
+        TemperatureControl(), 
       ],
     );
   }
@@ -86,11 +86,6 @@ class TemperatureControlState extends State<TemperatureControl> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        
-        const Text(
-          'Текст за температурою',
-          style: TextStyle(fontSize: 50),
-        ),
         Text(
           '${_temperature.toStringAsFixed(1)}°C',
           style: const TextStyle(

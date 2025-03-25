@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:my_project/main.dart'; 
+import 'package:my_project/main.dart';
 import 'package:my_project/screens/login_screen.dart';
 import 'package:my_project/screens/register_screen.dart';
 import 'package:my_project/screens/profile_screen.dart';
@@ -7,8 +7,8 @@ import 'package:my_project/screens/main_screen.dart';
 
 void main() {
   testWidgets('Test navigation between screens', (WidgetTester tester) async {
-   
-    await tester.pumpWidget(MyApp()); 
+    
+    await tester.pumpWidget(const MyApp());
 
     expect(find.byType(LoginScreen), findsOneWidget);
 

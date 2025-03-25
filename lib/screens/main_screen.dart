@@ -46,9 +46,9 @@ class MainContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: const [
+      children:  [
         Text(
           'Розумне опалення',
           style: TextStyle(
@@ -66,7 +66,7 @@ class MainContent extends StatelessWidget {
           ),
         ),
         SizedBox(height: 20),
-        TemperatureControl(),
+        TemperatureControl(), 
       ],
     );
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatelessWidget {
-  const MainScreen({super.key});
+  const MainScreen({super.key}); // Конструктор з key
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,7 +12,6 @@ class MainScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.account_circle),
             onPressed: () {
-             
               Navigator.pushNamed(context, '/profile');
             },
           ),
@@ -52,7 +51,7 @@ class MainScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            TemperatureControl(),
+            const TemperatureControl(), // Конструктор для TemperatureControl з const
           ],
         ),
       ),
@@ -61,11 +60,12 @@ class MainScreen extends StatelessWidget {
 }
 
 class TemperatureControl extends StatefulWidget {
+  const TemperatureControl({super.key});
   @override
-  _TemperatureControlState createState() => _TemperatureControlState();
+  TemperatureControlState createState() => TemperatureControlState(); 
 }
 
-class _TemperatureControlState extends State<TemperatureControl> {
+class TemperatureControlState extends State<TemperatureControl> {
   double _temperature = 22.0;
 
   @override

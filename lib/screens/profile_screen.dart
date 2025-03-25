@@ -86,7 +86,7 @@ class ProfileScreenState extends State<ProfileScreen> {
             TextButton(
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: const Text('Доступ надано!'),
+                  content: Text('Доступ надано!'),
                 ));
               },
               child: const Text(

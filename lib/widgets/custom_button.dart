@@ -12,7 +12,7 @@ class CustomButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.pink.shade300, // фон кнопки
         foregroundColor: Colors.white, // колір тексту
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14), // відступи
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30), // круглі кути
         ),

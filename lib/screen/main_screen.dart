@@ -17,14 +17,6 @@ class MainScreen extends StatelessWidget {
               Navigator.pushNamed(context, '/profile');
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.exit_to_app),
-            onPressed: () async {
-              final prefs = await SharedPreferences.getInstance();
-              await prefs.clear();
-              Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
-            },
-          ),
         ],
       ),
       body: Container(
@@ -67,11 +59,31 @@ class TemperatureControl extends StatefulWidget {
   const TemperatureControl({super.key});
 
   @override
-  TemperatureControlState createState() => TemperatureControlState();
+  State<TemperatureControl> createState() => _TemperatureControlState();
 }
 
-class TemperatureControlState extends State<TemperatureControl> {
+class _TemperatureControlState extends State<TemperatureControl> {
   double _temperature = 22.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTemperature();
+  }
+
+  Future<void> _loadTemperature() async {
+    final prefs = await SharedPreferences.getInstance();
+    final email = prefs.getString('email') ?? '';
+    setState(() {
+      _temperature = prefs.getDouble('temperature_$email') ?? 22.0;
+    });
+  }
+
+  Future<void> _saveTemperature(double value) async {
+    final prefs = await SharedPreferences.getInstance();
+    final email = prefs.getString('email') ?? '';
+    await prefs.setDouble('temperature_$email', value);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +106,7 @@ class TemperatureControlState extends State<TemperatureControl> {
             setState(() {
               _temperature = newValue;
             });
+            _saveTemperature(newValue);
           },
         ),
       ],

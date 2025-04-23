@@ -1,31 +1,72 @@
 import 'package:flutter/material.dart';
+import 'package:mob/services/local_auth_repository.dart';
+import 'package:mob/services/app_state.dart';
+import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
+
   @override
-  RegisterScreenState createState() => RegisterScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class RegisterScreenState extends State<RegisterScreen>{
+class _RegisterScreenState extends State<RegisterScreen> {
+  final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+  final _confirmPasswordController = TextEditingController();
+
+  final _authRepo = LocalAuthRepository();
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _register() async {
+    if (_formKey.currentState!.validate()) {
+      final existingUser = await _authRepo.getUserPassword(_emailController.text);
+
+      if (!mounted) return;
+
+      if (existingUser != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Користувач з таким email вже існує')),
+        );
+      } else {
+        await _authRepo.registerUser(
+          _emailController.text,
+          _passwordController.text,
+        );
+
+        if (!mounted) return;
+
+        await Provider.of<AppState>(context, listen: false)
+            .loadUserSettings(_emailController.text);
+
+        if (!mounted) return;
+
+        Navigator.pushReplacementNamed(context, '/home');
+      }
+    }
+  }
+
+  String? _validateConfirmPassword(String? value) {
+    if (value != _passwordController.text) {
+      return 'Паролі не співпадають';
+    }
+    return null;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Реєстрація'),
-        backgroundColor: Colors.pink.shade200,
-      ),
+      appBar: AppBar(title: const Text('Реєстрація')),
       body: Container(
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [Colors.pink.shade50, Colors.pink.shade100],
@@ -33,84 +74,38 @@ class RegisterScreenState extends State<RegisterScreen>{
             end: Alignment.bottomRight,
           ),
         ),
-        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextFormField(
                 controller: _emailController,
-                decoration: InputDecoration(
-                  labelText: 'Електронна пошта',
-                  labelStyle: const TextStyle(color: Colors.pink),
-                  filled: true,
-                  fillColor: Colors.white.withOpacity(0.8),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Будь ласка, введіть емейл';
-                  } else if (!value.contains('@')) {
-                    return 'Будь ласка, введіть коректний емейл';
-                  }
-                  return null;
-                },
+                decoration: _inputDecoration('Email'),
+                validator: (value) =>
+                value != null && value.contains('@')
+                    ? null
+                    : 'Введіть коректний email',
               ),
-              const SizedBox(height: 20),
               TextFormField(
                 controller: _passwordController,
+                decoration: _inputDecoration('Пароль'),
                 obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Пароль',
-                  labelStyle: const TextStyle(color: Colors.pink),
-                  filled: true,
-                  fillColor: Colors.white.withOpacity(0.8),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Будь ласка, введіть пароль';
-                  }
-                  return null;
-                },
+                validator: (value) =>
+                value != null && value.length >= 6
+                    ? null
+                    : 'Пароль має містити щонайменше 6 символів',
               ),
-              const SizedBox(height: 40),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 40),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  backgroundColor: Colors.pink.shade300,
-                  elevation: 5,
-                ),
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    Navigator.pushNamed(context, '/main');
-                  }
-                },
-                child: const Text('Зареєструватися'),
+              TextFormField(
+                controller: _confirmPasswordController,
+                decoration: _inputDecoration('Повторіть пароль'),
+                obscureText: true,
+                validator: _validateConfirmPassword,
               ),
               const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('Вже є акаунт?'),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/login');
-                    },
-                    child: const Text(
-                      'Увійти',
-                      style: TextStyle(color: Colors.pink),
-                    ),
-                  ),
-                ],
+              ElevatedButton(
+                style: _buttonStyle(),
+                onPressed: _register,
+                child: const Text('Зареєструватися'),
               ),
             ],
           ),
@@ -118,4 +113,19 @@ class RegisterScreenState extends State<RegisterScreen>{
       ),
     );
   }
+
+  InputDecoration _inputDecoration(String label) => InputDecoration(
+    labelText: label,
+    labelStyle: const TextStyle(color: Colors.pink),
+    filled: true,
+    fillColor: Colors.white.withOpacity(0.8),
+    border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+  );
+
+  ButtonStyle _buttonStyle() => ElevatedButton.styleFrom(
+    padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 40),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+    backgroundColor: Colors.pink.shade300,
+    elevation: 5,
+  );
 }

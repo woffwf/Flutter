@@ -60,8 +60,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      canPop: false,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Вхід'),
@@ -95,7 +95,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 if (_errorMessage != null) ...[
                   const SizedBox(height: 10),
-                  Text(_errorMessage!, style: const TextStyle(color: Colors.red)),
+                  Text(
+                    _errorMessage!,
+                    style: const TextStyle(color: Colors.red),
+                  ),
                 ],
                 const SizedBox(height: 20),
                 ElevatedButton(
@@ -110,7 +113,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     const Text('Немає акаунту?'),
                     TextButton(
                       onPressed: _goToRegister,
-                      child: const Text('Зареєструватися', style: TextStyle(color: Colors.pink)),
+                      child: const Text(
+                        'Зареєструватися',
+                        style: TextStyle(color: Colors.pink),
+                      ),
                     ),
                   ],
                 ),
@@ -127,12 +133,16 @@ class _LoginScreenState extends State<LoginScreen> {
     labelStyle: const TextStyle(color: Colors.pink),
     filled: true,
     fillColor: Colors.white.withOpacity(0.8),
-    border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(20),
+    ),
   );
 
   ButtonStyle _buttonStyle() => ElevatedButton.styleFrom(
     padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 40),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(30),
+    ),
     backgroundColor: Colors.pink.shade300,
     elevation: 5,
   );

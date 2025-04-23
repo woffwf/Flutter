@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mob/services/auth_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mob/services/app_state.dart';
-import 'package:mob/services/auth_service.dart';
-import 'package:mob/services/local_auth_repository.dart';
 import 'package:mob/screen/login_screen.dart';
 import 'package:mob/screen/register_screen.dart';
 import 'package:mob/screen/main_screen.dart';

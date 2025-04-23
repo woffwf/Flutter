@@ -63,51 +63,57 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Реєстрація')),
-      body: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.pink.shade50, Colors.pink.shade100],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Реєстрація'),
+          backgroundColor: Colors.pink.shade200,
         ),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _emailController,
-                decoration: _inputDecoration('Email'),
-                validator: (value) =>
-                value != null && value.contains('@')
-                    ? null
-                    : 'Введіть коректний email',
-              ),
-              TextFormField(
-                controller: _passwordController,
-                decoration: _inputDecoration('Пароль'),
-                obscureText: true,
-                validator: (value) =>
-                value != null && value.length >= 6
-                    ? null
-                    : 'Пароль має містити щонайменше 6 символів',
-              ),
-              TextFormField(
-                controller: _confirmPasswordController,
-                decoration: _inputDecoration('Повторіть пароль'),
-                obscureText: true,
-                validator: _validateConfirmPassword,
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                style: _buttonStyle(),
-                onPressed: _register,
-                child: const Text('Зареєструватися'),
-              ),
-            ],
+        body: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.pink.shade50, Colors.pink.shade100],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _emailController,
+                  decoration: _inputDecoration('Email'),
+                  validator: (value) => value != null && value.contains('@gmail.com')
+                      ? null
+                      : 'Введіть пошту @gmail.com',
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _passwordController,
+                  decoration: _inputDecoration('Пароль'),
+                  obscureText: true,
+                  validator: (value) => value != null && value.length >= 6
+                      ? null
+                      : 'Пароль має містити щонайменше 6 символів',
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _confirmPasswordController,
+                  decoration: _inputDecoration('Повторіть пароль'),
+                  obscureText: true,
+                  validator: _validateConfirmPassword,
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  style: _buttonStyle(),
+                  onPressed: _register,
+                  child: const Text('Зареєструватися'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

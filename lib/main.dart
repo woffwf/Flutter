@@ -9,6 +9,7 @@ import 'package:mob/screen/profile_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   final prefs = await SharedPreferences.getInstance();
   final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
   final savedEmail = prefs.getString('email');
@@ -19,8 +20,8 @@ void main() async {
   }
 
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => appState,
+    ChangeNotifierProvider<AppState>.value(
+      value: appState,
       child: MyApp(isLoggedIn: isLoggedIn),
     ),
   );
@@ -28,13 +29,18 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   final bool isLoggedIn;
+
   const MyApp({super.key, required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Smart Cup',
-      theme: ThemeData(primarySwatch: Colors.brown),
+      title: 'Smart heating',
+      theme: ThemeData(
+        primarySwatch: Colors.pink,
+        scaffoldBackgroundColor: Colors.pink.shade50,
+      ),
+      debugShowCheckedModeBanner: false,
       initialRoute: isLoggedIn ? '/home' : '/',
       routes: {
         '/': (context) => const LoginScreen(),

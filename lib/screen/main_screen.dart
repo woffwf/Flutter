@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MainScreen extends StatelessWidget {
-  const MainScreen({super.key}); // Конструктор з key
+  const MainScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,12 +15,6 @@ class MainScreen extends StatelessWidget {
             icon: const Icon(Icons.account_circle),
             onPressed: () {
               Navigator.pushNamed(context, '/profile');
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.exit_to_app), 
-            onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
             },
           ),
         ],
@@ -51,7 +47,7 @@ class MainScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            const TemperatureControl(), // Конструктор для TemperatureControl з const
+            const TemperatureControl(),
           ],
         ),
       ),
@@ -61,12 +57,33 @@ class MainScreen extends StatelessWidget {
 
 class TemperatureControl extends StatefulWidget {
   const TemperatureControl({super.key});
+
   @override
-  TemperatureControlState createState() => TemperatureControlState(); 
+  State<TemperatureControl> createState() => _TemperatureControlState();
 }
 
-class TemperatureControlState extends State<TemperatureControl> {
+class _TemperatureControlState extends State<TemperatureControl> {
   double _temperature = 22.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTemperature();
+  }
+
+  Future<void> _loadTemperature() async {
+    final prefs = await SharedPreferences.getInstance();
+    final email = prefs.getString('email') ?? '';
+    setState(() {
+      _temperature = prefs.getDouble('temperature_$email') ?? 22.0;
+    });
+  }
+
+  Future<void> _saveTemperature(double value) async {
+    final prefs = await SharedPreferences.getInstance();
+    final email = prefs.getString('email') ?? '';
+    await prefs.setDouble('temperature_$email', value);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,13 +99,14 @@ class TemperatureControlState extends State<TemperatureControl> {
         ),
         Slider(
           value: _temperature,
-          min: 15.0,
+          min: 20.0,
           max: 30.0,
           divisions: 30,
           onChanged: (double newValue) {
             setState(() {
               _temperature = newValue;
             });
+            _saveTemperature(newValue);
           },
         ),
       ],

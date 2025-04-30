@@ -9,8 +9,22 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.pink.shade300, // фон кнопки
+        foregroundColor: Colors.white, // колір тексту
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30), // круглі кути
+        ),
+      ),
       onPressed: onPressed,
-      child: Text(text),
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 16, // розмір шрифту
+          fontWeight: FontWeight.bold, // жирний текст
+        ),
+      ),
     );
   }
 }

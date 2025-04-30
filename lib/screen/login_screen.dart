@@ -31,12 +31,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _checkInitialConnection() async {
     final connected = await NetworkService.hasConnection();
+    if (!mounted) return;
     Provider.of<AppState>(context, listen: false).setOffline(!connected);
   }
 
   void _listenToConnectionChanges() {
     NetworkService.onConnectionChange.listen((result) {
       final isOffline = result == ConnectivityResult.none;
+      if (!mounted) return;
       Provider.of<AppState>(context, listen: false).setOffline(isOffline);
     });
   }
@@ -50,6 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _login() async {
     final connected = await NetworkService.hasConnection();
+    if (!mounted) return;
     if (!connected) {
       setState(() {
         _errorMessage = 'Немає підключення до Інтернету';
@@ -68,8 +71,10 @@ class _LoginScreenState extends State<LoginScreen> {
       if (success) {
         await Provider.of<AppState>(context, listen: false)
             .loadUserSettings(_emailController.text);
+        if (!mounted) return;
         Navigator.pushReplacementNamed(context, '/home');
       } else {
+        if (!mounted) return;
         setState(() {
           _errorMessage = 'Невірний email або пароль';
         });
@@ -107,7 +112,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: const Center(
                   child: Text(
                     '⚠️ Немає підключення до Інтернету',
-                    style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        color: Colors.red, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),

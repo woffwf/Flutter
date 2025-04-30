@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
@@ -40,7 +41,7 @@ class MqttService {
     }
   }
 
-  void _onConnected() => print('Connected');
-  void _onDisconnected() => print('Disconnected');
-  void _onSubscribed(String topic) => print('Subscribed to $topic');
+  void _onConnected() => debugPrint('Connected');
+  void _onDisconnected() => debugPrint('Disconnected');
+  void _onSubscribed(String topic) => debugPrint('Subscribed to $topic');
 }

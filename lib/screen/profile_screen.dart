@@ -27,12 +27,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _checkInitialConnection() async {
     final connected = await NetworkService.hasConnection();
+    if (!mounted) return;
     Provider.of<AppState>(context, listen: false).setOffline(!connected);
   }
 
   void _listenToConnectionChanges() {
     NetworkService.onConnectionChange.listen((result) {
       final isOffline = result == ConnectivityResult.none;
+      if (!mounted) return;
       Provider.of<AppState>(context, listen: false).setOffline(isOffline);
     });
   }
@@ -113,13 +115,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       await authRepo.logoutUser();
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', false);
-
-      if (context.mounted) {
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => const LoginScreen()),
-              (route) => false,
-        );
-      }
+      if (!mounted) return;
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
+            (route) => false,
+      );
     }
   }
 

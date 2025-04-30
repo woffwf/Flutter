@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:mob/services/app_state.dart';
 import 'package:mob/services/network_service.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -26,12 +27,14 @@ class _MainScreenState extends State<MainScreen> {
 
   void _checkInitialConnection() async {
     final connected = await NetworkService.hasConnection();
+    if (!mounted) return;
     Provider.of<AppState>(context, listen: false).setOffline(!connected);
   }
 
   void _listenToConnectionChanges() {
     NetworkService.onConnectionChange.listen((result) {
       final isOffline = result == ConnectivityResult.none;
+      if (!mounted) return;
       Provider.of<AppState>(context, listen: false).setOffline(isOffline);
     });
   }
@@ -134,6 +137,7 @@ class _TemperatureControlState extends State<TemperatureControl> {
       savedTemp = 22.0;
     }
 
+    if (!mounted) return;
     setState(() {
       _temperature = savedTemp;
     });
@@ -149,9 +153,9 @@ class _TemperatureControlState extends State<TemperatureControl> {
     _client = MqttServerClient.withPort('test.mosquitto.org', 'flutter_client', 1883);
     _client.logging(on: false);
     _client.keepAlivePeriod = 20;
-    _client.onDisconnected = () => print('MQTT disconnected');
-    _client.onConnected = () => print('MQTT connected');
-    _client.onSubscribed = (String topic) => print('Subscribed to $topic');
+    _client.onDisconnected = () => debugPrint('MQTT disconnected');
+    _client.onConnected = () => debugPrint('MQTT connected');
+    _client.onSubscribed = (String topic) => debugPrint('Subscribed to $topic');
 
     _client.connectionMessage = MqttConnectMessage()
         .withClientIdentifier('flutter_client')
@@ -167,16 +171,17 @@ class _TemperatureControlState extends State<TemperatureControl> {
         final double? newTemp = double.tryParse(message);
 
         if (newTemp != null && newTemp >= 20.0 && newTemp <= 30.0) {
+          if (!mounted) return;
           setState(() {
             _temperature = newTemp;
           });
           _saveTemperature(newTemp);
         } else {
-          print('Отримано некоректну температуру: $message');
+          debugPrint('Отримано некоректну температуру: $message');
         }
       });
     } catch (e) {
-      print('MQTT connection failed: $e');
+      debugPrint('MQTT connection failed: $e');
       _client.disconnect();
     }
   }

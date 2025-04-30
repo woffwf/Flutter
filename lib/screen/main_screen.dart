@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:mob/services/app_state.dart';
 import 'package:mob/services/network_service.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/foundation.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});

@@ -45,7 +45,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     await showDialog(
       context: context,
-      builder: (context) {
+      builder: (dialogContext) {
         return AlertDialog(
           title: const Text('Редагувати температуру опалення'),
           content: Column(
@@ -60,20 +60,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 label: '${temp.toStringAsFixed(1)}°C',
                 onChanged: (value) {
                   temp = value;
-                  (context as Element).markNeedsBuild();
+                  (dialogContext as Element).markNeedsBuild();
                 },
               ),
             ],
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Navigator.pop(dialogContext),
               child: const Text('Скасувати'),
             ),
             ElevatedButton(
               onPressed: () {
                 appState.setHeatingTemp(temp);
-                Navigator.pop(context);
+                Navigator.pop(dialogContext);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.pink.shade200,
@@ -88,18 +88,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _confirmLogout(BuildContext context) async {
+    final localContext = context;
+
     final shouldLogout = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
+      context: localContext,
+      builder: (dialogContext) => AlertDialog(
         title: const Text('Підтвердження виходу'),
         content: const Text('Чи дійсно ви хочете покинути акаунт?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
+            onPressed: () => Navigator.of(dialogContext).pop(false),
             child: const Text('Скасувати'),
           ),
           ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(true),
+            onPressed: () => Navigator.of(dialogContext).pop(true),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.pink.shade200,
               foregroundColor: Colors.white,
@@ -115,8 +117,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       await authRepo.logoutUser();
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', false);
+
       if (!mounted) return;
-      Navigator.of(context).pushAndRemoveUntil(
+
+      Navigator.of(localContext).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const LoginScreen()),
             (route) => false,
       );

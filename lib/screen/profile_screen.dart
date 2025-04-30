@@ -88,10 +88,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _confirmLogout(BuildContext context) async {
-    final localContext = context;
-
     final shouldLogout = await showDialog<bool>(
-      context: localContext,
+      context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Підтвердження виходу'),
         content: const Text('Чи дійсно ви хочете покинути акаунт?'),
@@ -120,10 +118,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       if (!mounted) return;
 
-      Navigator.of(localContext).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const LoginScreen()),
-            (route) => false,
-      );
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const LoginScreen()),
+              (route) => false,
+        );
+      });
     }
   }
 

@@ -4,16 +4,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AppState extends ChangeNotifier {
   String? _userEmail;
   double _heatingTemp = 22.0;
+  bool _isOffline = false;
 
   String? get userEmail => _userEmail;
   double get heatingTemp => _heatingTemp;
+  bool get isOffline => _isOffline;
 
   Future<void> loadUserSettings(String email) async {
     _userEmail = email;
     final prefs = await SharedPreferences.getInstance();
-
     _heatingTemp = prefs.getDouble('heating_temp_$email') ?? 22.0;
-
     notifyListeners();
   }
 
@@ -25,5 +25,10 @@ class AppState extends ChangeNotifier {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setDouble('heating_temp_${_userEmail!}', value);
     }
+  }
+
+  void setOffline(bool value) {
+    _isOffline = value;
+    notifyListeners();
   }
 }

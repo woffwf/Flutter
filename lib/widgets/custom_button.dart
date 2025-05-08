@@ -10,19 +10,19 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.pink.shade300, // фон кнопки
-        foregroundColor: Colors.white, // колір тексту
+        backgroundColor: Colors.pink.shade300,
+        foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30), // круглі кути
+          borderRadius: BorderRadius.circular(30),
         ),
       ),
       onPressed: onPressed,
       child: Text(
         text,
         style: const TextStyle(
-          fontSize: 16, // розмір шрифту
-          fontWeight: FontWeight.bold, // жирний текст
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
         ),
       ),
     );

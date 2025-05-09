@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+// Сервіси та стани
 import 'package:mob/services/app_state.dart';
+
+// Екрани
 import 'package:mob/screen/login_screen.dart';
 import 'package:mob/screen/register_screen.dart';
 import 'package:mob/screen/main_screen.dart';
 import 'package:mob/screen/profile_screen.dart';
+import 'package:mob/screen/qr_scanner_screen.dart'; // Додано
+import 'package:mob/screen/saved_qr_screen.dart';   // Додано
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,6 +53,8 @@ class MyApp extends StatelessWidget {
         '/register': (context) => const RegisterScreen(),
         '/home': (context) => const MainScreen(),
         '/profile': (context) => const ProfileScreen(),
+        '/scan': (context) => QRScannerScreen(),           // Додано
+        '/saved': (context) => const SavedQrScreen(),      // Додано
       },
     );
   }

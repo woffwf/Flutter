@@ -38,6 +38,10 @@ dependencies:
   cupertino_icons: ^1.0.8
   shared_preferences: ^2.5.3
   provider: ^6.1.1
+  usb_serial: ^0.5.2
+  rxdart: ^0.28.0
+  mobile_scanner: ^6.0.10
+
 
 
   # The following adds the Cupertino Icons font to your application.

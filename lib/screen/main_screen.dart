@@ -99,6 +99,32 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                   const SizedBox(height: 20),
                   const TemperatureControl(),
+                  const SizedBox(height: 40),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/scan');
+                    },
+                    icon: const Icon(Icons.qr_code_scanner),
+                    label: const Text('Сканувати QR'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.pink.shade400,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/saved');
+                    },
+                    icon: const Icon(Icons.save),
+                    label: const Text('Збережені повідомлення'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.pink.shade300,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -109,6 +135,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 }
 
+// TemperatureControl не змінено
 class TemperatureControl extends StatefulWidget {
   const TemperatureControl({super.key});
 

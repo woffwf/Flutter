@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../cubit/auth/auth_cubit.dart';
 import '../cubit/connection/connection_cubit.dart' as conn;
 
 import 'package:flutter/material.dart';
@@ -28,7 +27,6 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void _checkInitialConnection() async {
-    final connected = await NetworkService.hasConnection();
     if (!mounted) return;
     context.read<conn.ConnectionCubit>().setDisconnected();
   }

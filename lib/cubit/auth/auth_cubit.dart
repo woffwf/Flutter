@@ -25,7 +25,6 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   void loadUserSettings(String email) {
-    print("Завантаження налаштувань для $email");
   }
 
   void setHeatingTemp(double value) {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../cubit/auth/auth_cubit.dart';
+import 'package:mob/cubit/auth/auth_cubit.dart';
 import 'package:mob/services/local_auth_repository.dart';
 
 class RegisterScreen extends StatefulWidget {

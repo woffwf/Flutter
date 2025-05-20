@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../cubit/saved_qr/saved_qr_cubit.dart';
+import 'package:mob/cubit/saved_qr/saved_qr_cubit.dart';
 
 class SavedQrScreen extends StatelessWidget {
   const SavedQrScreen({super.key});

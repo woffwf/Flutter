@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mob/services/local_auth_repository.dart';
 import 'package:mob/screen/login_screen.dart';
 import 'package:mob/screen/main_screen.dart';
-import 'package:mob/services/app_state.dart';
 import 'package:mob/services/network_service.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:mob/cubit/auth/auth_cubit.dart';
+import 'package:mob/cubit/connection/connection_cubit.dart' as conn;
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -28,20 +29,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _checkInitialConnection() async {
     final connected = await NetworkService.hasConnection();
     if (!mounted) return;
-    Provider.of<AppState>(context, listen: false).setOffline(!connected);
+    connected
+        ? context.read<conn.ConnectionCubit>().setConnected()
+        : context.read<conn.ConnectionCubit>().setDisconnected();
   }
 
   void _listenToConnectionChanges() {
     NetworkService.onConnectionChange.listen((result) {
       final isOffline = result == ConnectivityResult.none;
       if (!mounted) return;
-      Provider.of<AppState>(context, listen: false).setOffline(isOffline);
+      isOffline
+          ? context.read<conn.ConnectionCubit>().setDisconnected()
+          : context.read<conn.ConnectionCubit>().setConnected();
     });
   }
 
   Future<void> _editHeatingTemperature(BuildContext context) async {
-    final appState = Provider.of<AppState>(context, listen: false);
-    double temp = appState.heatingTemp;
+    double temp = context.read<AuthCubit>().heatingTemp;
 
     await showDialog(
       context: context,
@@ -72,7 +76,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                appState.setHeatingTemp(temp);
+                context.read<AuthCubit>().setHeatingTemp(temp);
                 Navigator.pop(dialogContext);
               },
               style: ElevatedButton.styleFrom(
@@ -130,8 +134,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final authRepo = LocalAuthRepository();
-    final appState = Provider.of<AppState>(context);
-    final isOffline = appState.isOffline;
 
     return Scaffold(
       appBar: AppBar(
@@ -152,82 +154,88 @@ class _ProfileScreenState extends State<ProfileScreen> {
           )
         ],
       ),
-      body: Column(
-        children: [
-          if (isOffline)
-            Container(
-              width: double.infinity,
-              color: Colors.red.shade100,
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: const Center(
-                child: Text(
-                  '⚠️ Немає підключення до Інтернету',
-                  style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.pink.shade50, Colors.pink.shade100],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-              ),
-              child: FutureBuilder<String?>(
-                future: authRepo.getCurrentUserEmail(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
+      body: BlocBuilder<conn.ConnectionCubit, conn.ConnectionState>(
+        builder: (context, state) {
+          final isOffline = state is conn.ConnectionOffline;
 
-                  final email = snapshot.data ?? 'Невідомо';
-
-                  return SingleChildScrollView(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        Text(
-                          'Розумне опалення',
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.pink.shade700,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        Card(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                          elevation: 4,
-                          child: ListTile(
-                            title: const Text('Email'),
-                            subtitle: Text(email),
-                            leading: const Icon(Icons.email),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Card(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                          elevation: 4,
-                          child: ListTile(
-                            title: const Text('Температура опалення'),
-                            subtitle: Text('${appState.heatingTemp.toStringAsFixed(1)}°C'),
-                            leading: const Icon(Icons.thermostat),
-                            trailing: IconButton(
-                              icon: const Icon(Icons.edit),
-                              onPressed: () => _editHeatingTemperature(context),
-                            ),
-                          ),
-                        ),
-                      ],
+          return Column(
+            children: [
+              if (isOffline)
+                Container(
+                  width: double.infinity,
+                  color: Colors.red.shade100,
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: const Center(
+                    child: Text(
+                      '⚠️ Немає підключення до Інтернету',
+                      style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
                     ),
-                  );
-                },
+                  ),
+                ),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Colors.pink.shade50, Colors.pink.shade100],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                  ),
+                  child: FutureBuilder<String?>(
+                    future: authRepo.getCurrentUserEmail(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+
+                      final email = snapshot.data ?? 'Невідомо';
+
+                      return SingleChildScrollView(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            Text(
+                              'Розумне опалення',
+                              style: TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.pink.shade700,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Card(
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                              elevation: 4,
+                              child: ListTile(
+                                title: const Text('Email'),
+                                subtitle: Text(email),
+                                leading: const Icon(Icons.email),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Card(
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                              elevation: 4,
+                              child: ListTile(
+                                title: const Text('Температура опалення'),
+                                subtitle: Text('${context.read<AuthCubit>().heatingTemp.toStringAsFixed(1)}°C'),
+                                leading: const Icon(Icons.thermostat),
+                                trailing: IconButton(
+                                  icon: const Icon(Icons.edit),
+                                  onPressed: () => _editHeatingTemperature(context),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ),
-            ),
-          ),
-        ],
+            ],
+          );
+        },
       ),
     );
   }

@@ -1,9 +1,11 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mob/cubit/connection/connection_cubit.dart' as conn;
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
-import 'package:provider/provider.dart';
-import 'package:mob/services/app_state.dart';
+
 import 'package:mob/services/network_service.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
@@ -25,22 +27,21 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void _checkInitialConnection() async {
-    final connected = await NetworkService.hasConnection();
     if (!mounted) return;
-    Provider.of<AppState>(context, listen: false).setOffline(!connected);
+    context.read<conn.ConnectionCubit>().setDisconnected();
   }
 
   void _listenToConnectionChanges() {
     NetworkService.onConnectionChange.listen((result) {
       final isOffline = result == ConnectivityResult.none;
       if (!mounted) return;
-      Provider.of<AppState>(context, listen: false).setOffline(isOffline);
+      isOffline ? context.read<conn.ConnectionCubit>().setDisconnected() : context.read<conn.ConnectionCubit>().setConnected();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final isOffline = Provider.of<AppState>(context).isOffline;
+    final isOffline = context.read<conn.ConnectionCubit>().isOffline;
 
     return Scaffold(
       appBar: AppBar(

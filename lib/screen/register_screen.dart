@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mob/cubit/auth/auth_cubit.dart';
 import 'package:mob/services/local_auth_repository.dart';
-import 'package:mob/services/app_state.dart';
-import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -15,7 +15,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-
   final _authRepo = LocalAuthRepository();
 
   @override
@@ -44,8 +43,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
         if (!mounted) return;
 
-        await Provider.of<AppState>(context, listen: false)
-            .loadUserSettings(_emailController.text);
+        context.read<AuthCubit>().loadUserSettings(_emailController.text);
 
         if (!mounted) return;
 
@@ -111,6 +109,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   style: _buttonStyle(),
                   onPressed: _register,
                   child: const Text('Зареєструватися'),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Вже маєте акаунт?'),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(context, '/login');
+                      },
+                      child: const Text(
+                        'Увійти',
+                        style: TextStyle(color: Colors.pink),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

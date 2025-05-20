@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mob/screen/register_screen.dart';
 import 'package:mob/services/local_auth_repository.dart';
-import 'package:mob/services/app_state.dart';
 import 'package:mob/services/network_service.dart';
-import 'package:provider/provider.dart';
+import 'package:mob/cubit/auth/auth_cubit.dart';
+import 'package:mob/cubit/connection/connection_cubit.dart' as conn;
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -32,14 +33,20 @@ class _LoginScreenState extends State<LoginScreen> {
   void _checkInitialConnection() async {
     final connected = await NetworkService.hasConnection();
     if (!mounted) return;
-    Provider.of<AppState>(context, listen: false).setOffline(!connected);
+    if (!connected) {
+      context.read<conn.ConnectionCubit>().setDisconnected();
+    } else {
+      context.read<conn.ConnectionCubit>().setConnected();
+    }
   }
 
   void _listenToConnectionChanges() {
     NetworkService.onConnectionChange.listen((result) {
       final isOffline = result == ConnectivityResult.none;
       if (!mounted) return;
-      Provider.of<AppState>(context, listen: false).setOffline(isOffline);
+      isOffline
+          ? context.read<conn.ConnectionCubit>().setDisconnected()
+          : context.read<conn.ConnectionCubit>().setConnected();
     });
   }
 
@@ -69,8 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (!mounted) return;
 
       if (success) {
-        await Provider.of<AppState>(context, listen: false)
-            .loadUserSettings(_emailController.text);
+        context.read<AuthCubit>().loadUserSettings(_emailController.text);
         if (!mounted) return;
         Navigator.pushReplacementNamed(context, '/home');
       } else {
@@ -93,8 +99,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isOffline = Provider.of<AppState>(context).isOffline;
-
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -102,81 +106,87 @@ class _LoginScreenState extends State<LoginScreen> {
           title: const Text('Вхід'),
           backgroundColor: Colors.pink.shade200,
         ),
-        body: Column(
-          children: [
-            if (isOffline)
-              Container(
-                width: double.infinity,
-                color: Colors.red.shade100,
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: const Center(
-                  child: Text(
-                    '⚠️ Немає підключення до Інтернету',
-                    style: TextStyle(
-                        color: Colors.red, fontWeight: FontWeight.bold),
+        body: BlocBuilder<conn.ConnectionCubit, conn.ConnectionState>(
+          builder: (context, state) {
+            final isOffline = state is conn.ConnectionOffline;
+
+            return Column(
+              children: [
+                if (isOffline)
+                  Container(
+                    width: double.infinity,
+                    color: Colors.red.shade100,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: const Center(
+                      child: Text(
+                        '⚠️ Немає підключення до Інтернету',
+                        style: TextStyle(
+                            color: Colors.red, fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Colors.pink.shade50, Colors.pink.shade100],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
-                padding: const EdgeInsets.all(16),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TextFormField(
-                        controller: _emailController,
-                        decoration: _inputDecoration('Електронна пошта'),
-                        validator: _validateEmail,
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Colors.pink.shade50, Colors.pink.shade100],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
-                      const SizedBox(height: 20),
-                      TextFormField(
-                        controller: _passwordController,
-                        obscureText: true,
-                        decoration: _inputDecoration('Пароль'),
-                        validator: _validatePassword,
-                      ),
-                      if (_errorMessage != null) ...[
-                        const SizedBox(height: 10),
-                        Text(
-                          _errorMessage!,
-                          style: const TextStyle(color: Colors.red),
-                        ),
-                      ],
-                      const SizedBox(height: 20),
-                      ElevatedButton(
-                        style: _buttonStyle(),
-                        onPressed: _login,
-                        child: const Text('Увійти'),
-                      ),
-                      const SizedBox(height: 20),
-                      Row(
+                    ),
+                    padding: const EdgeInsets.all(16),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text('Немає акаунту?'),
-                          TextButton(
-                            onPressed: _goToRegister,
-                            child: const Text(
-                              'Зареєструватися',
-                              style: TextStyle(color: Colors.pink),
+                          TextFormField(
+                            controller: _emailController,
+                            decoration: _inputDecoration('Електронна пошта'),
+                            validator: _validateEmail,
+                          ),
+                          const SizedBox(height: 20),
+                          TextFormField(
+                            controller: _passwordController,
+                            obscureText: true,
+                            decoration: _inputDecoration('Пароль'),
+                            validator: _validatePassword,
+                          ),
+                          if (_errorMessage != null) ...[
+                            const SizedBox(height: 10),
+                            Text(
+                              _errorMessage!,
+                              style: const TextStyle(color: Colors.red),
                             ),
+                          ],
+                          const SizedBox(height: 20),
+                          ElevatedButton(
+                            style: _buttonStyle(),
+                            onPressed: _login,
+                            child: const Text('Увійти'),
+                          ),
+                          const SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text('Немає акаунту?'),
+                              TextButton(
+                                onPressed: _goToRegister,
+                                child: const Text(
+                                  'Зареєструватися',
+                                  style: TextStyle(color: Colors.pink),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ),
-          ],
+              ],
+            );
+          },
         ),
       ),
     );
